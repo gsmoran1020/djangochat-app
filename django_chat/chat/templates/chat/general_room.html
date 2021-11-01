@@ -14,7 +14,7 @@
     <script>
         const username = JSON.parse(document.getElementById('username').textContent);
 
-        const chatWebsocket = new WebSocket('ws://' + window.location.host + '/ws/' + 'chat/general/');
+        const chatWebsocket = new WebSocket('wss://' + window.location.host + '/ws/' + 'chat/general/');
 
 
         chatWebsocket.onmessage = function(e) {
