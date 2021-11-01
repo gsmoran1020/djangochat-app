@@ -11,14 +11,17 @@ constantly==15.1.0
 crispy-bootstrap5==0.6
 cryptography==35.0.0
 daphne==3.0.2
+dj-database-url==0.5.0
 Django==3.2.8
 django-crispy-forms==1.13.0
+django-heroku==0.3.1
 gunicorn==20.1.0
 hiredis==2.0.0
 hyperlink==21.0.0
 idna==3.3
 incremental==21.3.0
 msgpack==1.0.2
+psycopg2==2.9.1
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
 pycparser==2.20
@@ -31,4 +34,5 @@ Twisted==21.7.0
 twisted-iocpsupport==1.0.2
 txaio==21.2.1
 typing-extensions==3.10.0.2
+whitenoise==5.3.0
 zope.interface==5.4.0
