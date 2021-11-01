@@ -1,0 +1,14 @@
+{% extends "chat/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container w-50 mt-3">
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <a href="{% url 'password_reset' %}">Forgot Password?</a>
+            <br>
+            <input class="btn btn-dark mt-2" type="submit" value="Login">
+            <p class="mt-2">Need An Account? <a href="{% url 'chat-register' %}">Sign Up</a></p>
+        </form>
+    </div>   
+{% endblock content %}

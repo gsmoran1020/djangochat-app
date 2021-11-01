@@ -1,0 +1,126 @@
+{% extends "chat/base.html" %}
+{% block content %}
+<style>
+
+.wrap {
+    display: flex;
+    background: white;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 7px 7px 30px -5px rgba(0,0,0,0.1);
+    margin-bottom: 2rem;
+}
+
+.wrap:hover {
+    background: linear-gradient(135deg,#6C757D 0%,#212529 100%);
+    color: white;
+}
+
+.vcenter {
+    margin: auto;
+}
+
+.mbr-section-title3 {
+    text-align: left;
+}
+
+h2 {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+.display-5 {
+    font-family: 'Source Sans Pro',sans-serif;
+    font-size: 1.4rem;
+}
+.mbr-bold {
+    font-weight: 700;
+}
+
+ p {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    line-height: 25px;
+}
+.display-6 {
+    font-family: 'Source Sans Pro',sans-serif;
+    font-size: 1rem;
+}
+</style>
+
+<div class="container text-center">
+    <h1 class="mt-4">Join a Chat Room</h1>
+
+
+    <div class="container mt-4">
+
+	
+		<div class="row mbr-justify-content-center">
+
+            <div class="col-lg-6 mbr-col-md-10" id="general-chat">
+                <div class="wrap">
+                    <div class="text-wrap vcenter">
+                        <h2 class="mbr-fonts-style mbr-bold mbr-section-title3 display-5">General <span>Chat</span></h2>
+                        <p class="mbr-fonts-style text1 mbr-text display-6">A simple general chat, talk about anything you want!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 mbr-col-md-10">
+                <div class="wrap">
+                    <div class="text-wrap vcenter">
+                        <h2 class="mbr-fonts-style mbr-bold mbr-section-title3 display-5">Programming
+                            <span>Chat</span>
+                        </h2>
+                        <p class="mbr-fonts-style text1 mbr-text display-6">A chat room for discussion focused around programming.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <h1>Create a Chat Room</h1>
+        <h4>Enter a room name or generate one to create and join your own room.</h4>
+        <h4>Share the url with other users and create a spontaneous chat room instantly.</h4>
+        <input class="form-control mt-3 mx-auto w-25" type="text" id="room-input" placeholder="Chat Room">
+        <button class="btn btn-dark mt-3" type="button" id="submit-input">Enter Room</button>
+        <button class="btn btn-secondary mt-3" type="button" id="room-generate">Generate Room</button>
+    </div>
+    
+</div>
+    <script type="text/javascript">
+        const genRanHex = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+
+        document.querySelector('#room-input').focus();
+
+
+        document.querySelector('#room-input').onkeyup = function(e) {
+            if (e.keyCode === 13) {
+                document.querySelector('#submit-input').click();
+            }
+        };
+        
+        document.querySelector('#submit-input').onclick = function(e) {
+            var room = document.querySelector('#room-input').value.trim();
+            
+            if (room.toLowerCase() == 'general' || room.toLowerCase() == 'programming') {
+                alert('That room name is reserved, please try a different room name.')
+            } else if (!room || room.match(/\W/)) {
+                alert('Please enter a valid room name or generate one.')
+            } else {
+                 window.location.pathname = '/chat/' + room + '/';
+            }   
+        };
+
+        document.querySelector('#room-generate').onclick = function(e) {
+            var room = genRanHex(16);
+            document.querySelector('#room-input').value = room;
+        };
+
+        document.querySelector('#general-chat').onclick = function(e) {
+            window.location.pathname = '/chat/general/';
+        }
+
+        document.querySelector('#programming-chat').onclick = function(e) {
+            window.location.pathname = '/chat/programming/';
+        }
+    </script>
+{% endblock content %}

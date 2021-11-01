@@ -1,0 +1,14 @@
+{% extends "chat/base.html" %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div class="container w-50 mt-3">
+        <h1>Register With DjangoChat</h1>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form|crispy }}
+            <input class="btn btn-dark" type="submit" value="Submit">
+        </form>
+            <p class="mt-2">Already Have An Account? <a href="{% url 'chat-login' %}">Login</a></p>
+    </div>
+    
+{% endblock content %}
