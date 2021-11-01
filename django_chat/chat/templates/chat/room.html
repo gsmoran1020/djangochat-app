@@ -1,6 +1,71 @@
 {% extends "chat/base.html" %}
 {% block content %}
 {% load static %}
+<script type="text/javascript">
+    const roomName = JSON.parse(document.getElementById('room-name').textContent);
+    const username = JSON.parse(document.getElementById('username').textContent);
+    const chatWebsocket = new WebSocket('ws://' + window.location.host + '/ws/' + 'chat/' + roomName +'/');
+
+    chatWebsocket.onmessage = function(e) {
+        const data = JSON.parse(e.data)
+        if (data.type == 'user_joined') {
+            document.querySelector('#main-chat-body').innerHTML += '<p style="color: green;">' + data.notification + '</p>';
+        } else if (data.type == 'user_disconnected') {
+            document.querySelector('#main-chat-body').innerHTML += '<p>' + data.notification + '</p>';
+        } else {
+            if (data.username == username) {
+                document.querySelector('#main-chat-body').innerHTML += 
+                '<div class="row">'
+                + '<div class="col w-50"></div>'
+                + '<div class="col justify-self-end text-left text-break text-wrap border bg-secondary bg-opacity-10 pb-4 pe-3 ps-4 mb-3 mt-3 rounded-3">'
+                + '<div><strong>'
+                + username
+                + '</strong></div>'
+                + '<div>'
+                + data.message
+                + '</div></div></div>';
+                document.querySelector('#main-chat-body').scrollTop = document.querySelector('#main-chat-body').scrollHeight;
+            } else {
+                document.querySelector('#main-chat-body').innerHTML += 
+                '<div class="row w-50">'
+                + '<div class="col justify-self-start text-left text-break text-wrap border bg-secondary bg-opacity-25 pb-4 pe-3 ps-4 mb-3 mt-3 rounded-3">'
+                + '<div><strong>'
+                + data.username
+                + '</strong></div>'
+                + '<div>'
+                + data.message
+                + '</div></div></div>';
+                document.querySelector('#main-chat-body').scrollTop = document.querySelector('#main-chat-body').scrollHeight;
+            }
+        }   
+    };
+            
+    chatWebsocket.onclose = function(e) {
+        if (e.wasClean) {
+            console.log("Closed Successfully");
+        } else {
+            console.log("Connection died.");
+        }
+    };
+
+    document.querySelector('#chat-input').focus();
+            
+    document.querySelector('#chat-input').onkeyup = function(e) {
+        if (e.keyCode === 13) {
+            document.querySelector('#chat-send').click();
+        }
+    };
+
+    document.querySelector('#chat-send').onclick = function(e) {
+        var chatInputDOM = document.querySelector('#chat-input');
+        var message = chatInputDOM.value;
+        chatWebsocket.send(JSON.stringify({
+            'message': message,
+            'username': username
+        }))
+        chatInputDOM.value = '';
+    };
+</script>
 <div class="container">
     <h1 class="mt-4 text-center">Welcome to chat room: "{{ room_name }}", start chatting!</h1>
     <div class="row">
@@ -14,69 +79,5 @@
     {{ room_name|json_script:"room-name" }}
     {{ request.user.username|json_script:"username" }}
 
-<script type="text/javascript">
-        const roomName = JSON.parse(document.getElementById('room-name').textContent);
-        const username = JSON.parse(document.getElementById('username').textContent);
-        const chatWebsocket = new WebSocket('ws://' + window.location.host + '/ws/' + 'chat/' + roomName +'/');
-
-        chatWebsocket.onmessage = function(e) {
-            const data = JSON.parse(e.data)
-            if (data.type == 'user_joined') {
-                document.querySelector('#main-chat-body').innerHTML += '<p style="color: green;">' + data.notification + '</p>';
-            } else if (data.type == 'user_disconnected') {
-                document.querySelector('#main-chat-body').innerHTML += '<p>' + data.notification + '</p>';
-            } else {
-                if (data.username == username) {
-                    document.querySelector('#main-chat-body').innerHTML += 
-                    '<div class="row">'
-                    + '<div class="col w-50"></div>'
-                    + '<div class="col justify-self-end text-left text-break text-wrap border bg-secondary bg-opacity-10 pb-4 pe-3 ps-4 mb-3 mt-3 rounded-3">'
-                    + '<div><strong>'
-                    + username
-                    + '</strong></div>'
-                    + '<div>'
-                    + data.message
-                    + '</div></div></div>';
-                    document.querySelector('#main-chat-body').scrollTop = document.querySelector('#main-chat-body').scrollHeight;
-                } else {
-                    document.querySelector('#main-chat-body').innerHTML += 
-                    '<div class="row w-50">'
-                    + '<div class="col justify-self-start text-left text-break text-wrap border bg-secondary bg-opacity-25 pb-4 pe-3 ps-4 mb-3 mt-3 rounded-3">'
-                    + '<div><strong>'
-                    + data.username
-                    + '</strong></div>'
-                    + '<div>'
-                    + data.message
-                    + '</div></div></div>';
-                    document.querySelector('#main-chat-body').scrollTop = document.querySelector('#main-chat-body').scrollHeight;
-                }
-            }   
-        };
-                
-        chatWebsocket.onclose = function(e) {
-            if (e.wasClean) {
-                console.log("Closed Successfully");
-            } else {
-                console.log("Connection died.");
-            }
-        };
-
-        document.querySelector('#chat-input').focus();
-                
-        document.querySelector('#chat-input').onkeyup = function(e) {
-            if (e.keyCode === 13) {
-                document.querySelector('#chat-send').click();
-            }
-        };
-
-        document.querySelector('#chat-send').onclick = function(e) {
-            var chatInputDOM = document.querySelector('#chat-input');
-            var message = chatInputDOM.value;
-            chatWebsocket.send(JSON.stringify({
-                'message': message,
-                'username': username
-            }))
-            chatInputDOM.value = '';
-        };
-    </script>    
+    
 {% endblock content %}
