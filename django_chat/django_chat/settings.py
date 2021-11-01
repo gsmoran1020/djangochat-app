@@ -15,7 +15,7 @@ import django_heroku
 from pathlib import Path
 
 
-django_heroku.settings(locals())
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -161,3 +161,4 @@ EMAIL_HOST_USER = os.environ.get('EMAIL_USERNAME')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_PASSWORD')
 
 
+django_heroku.settings(locals())
